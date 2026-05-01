@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haven RP — Loja de Extras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:         #07070c;
+    --bg2:        #0d0d18;
+    --bg3:        #12121f;
+    --gold:       #f59e0b;
+    --gold-light: #fcd34d;
+    --gold-dim:   rgba(245,158,11,0.12);
+    --gold-glow:  rgba(245,158,11,0.35);
+    --red:        #ef4444;
+    --green:      #22c55e;
+    --glass:      rgba(245,158,11,0.06);
+    --glass-b:    rgba(245,158,11,0.18);
+    --text:       #f1f5f9;
+    --text-muted: #64748b;
+    --text-dim:   #94a3b8;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.6;
+  }
+
+  /* ── GRID LINES ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(245,158,11,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,158,11,0.025) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 3rem;
+    background: rgba(7,7,12,0.92);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(245,158,11,0.15);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--text-dim); }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-discord {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 1.1rem;
+    border: 1px solid var(--glass-b);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--gold-light);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .nav-discord:hover {
+    background: var(--gold-dim);
+    border-color: var(--gold);
+  }
+  .nav-discord svg { width:16px; height:16px; fill:currentColor; }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+    overflow: hidden;
+  }
+
+  /* Diagonal gold lines background */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 60px,
+      rgba(245,158,11,0.018) 60px,
+      rgba(245,158,11,0.018) 61px
+    );
+    animation: heroLines 30s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes heroLines {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(80px); }
+  }
+
+  /* Gold radial glow */
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 900px;
+    height: 900px;
+    background: radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 14vw, 13rem);
+    line-height: 0.85;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards;
+  }
+  .hero-title .gold-word {
+    -webkit-text-stroke: 2px var(--gold);
+    color: transparent;
+    display: block;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin-top: 2rem;
+    max-width: 560px;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+    position: relative; z-index: 1;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+    position: relative; z-index: 1;
+  }
+  .btn-primary {
+    padding: 0.75rem 2.2rem;
+    background: var(--gold);
+    color: #000;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+  .btn-outline {
+    padding: 0.75rem 2rem;
+    background: transparent;
+    color: var(--text-dim);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.12);
+    cursor: pointer;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0;
+    animation: fadeIn 1s 1.2s forwards;
+  }
+  .hero-scroll span {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* ── COUNTER STRIP ── */
+  .counter-strip {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid rgba(245,158,11,0.15);
+    border-bottom: 1px solid rgba(245,158,11,0.15);
+    background: rgba(13,13,24,0.8);
+  }
+  .counter-item {
+    padding: 2rem;
+    text-align: center;
+    border-right: 1px solid rgba(245,158,11,0.12);
+    position: relative;
+    overflow: hidden;
+  }
+  .counter-item:last-child { border-right: none; }
+  .counter-item::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+  .counter-item:hover::before { transform: scaleX(1); }
+  .counter-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    letter-spacing: 0.05em;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .counter-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-wrap { position: relative; z-index: 1; }
+
+  .section-header {
+    padding: 5rem 3rem 3rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .section-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    letter-spacing: 0.06em;
+    line-height: 1;
+    color: var(--text);
+  }
+  .section-title span { color: var(--gold); }
+  .section-desc {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    max-width: 400px;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    padding: 0 3rem 2.5rem;
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    position: relative; z-index: 1;
+  }
+  .filter-btn {
+    padding: 0.4rem 1.1rem;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-muted);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+  .filter-btn:hover { border-color: var(--gold); color: var(--gold-light); }
+  .filter-btn.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #000;
+  }
+
+  /* ── EXTRAS GRID ── */
+  .extras-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5px;
+    padding: 0 3rem 5rem;
+    position: relative; z-index: 1;
+  }
+
+  .extra-card {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    cursor: pointer;
+    background: var(--bg3);
+    transition: transform 0.35s cubic-bezier(.25,.46,.45,.94);
+  }
+  .extra-card:hover { transform: scale(1.02); z-index: 2; }
+  .extra-card[data-hidden="true"] { display: none; }
+
+  .extra-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s cubic-bezier(.25,.46,.45,.94), filter 0.4s;
+    filter: brightness(0.85);
+  }
+  .extra-card:hover img {
+    transform: scale(1.08);
+    filter: brightness(0.7);
+  }
+
+  /* Bottom gradient info always visible */
+  .extra-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 1.4rem 1.2rem 1.1rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.5) 60%, transparent 100%);
+    transition: padding 0.3s;
+  }
+  .extra-card:hover .extra-info { padding-bottom: 4rem; }
+
+  .extra-cat {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .extra-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.05em;
+    color: var(--text);
+    line-height: 1.1;
+  }
+  .extra-price {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--gold-light);
+    margin-top: 0.3rem;
+  }
+
+  /* Buy button slides up on hover */
+  .extra-buy-btn {
+    position: absolute;
+    bottom: 1rem;
+    left: 1.2rem;
+    right: 1.2rem;
+    padding: 0.6rem;
+    background: var(--gold);
+    color: #000;
+    border: none;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+    transform: translateY(calc(100% + 1rem));
+    opacity: 0;
+    transition: transform 0.35s cubic-bezier(.25,.46,.45,.94), opacity 0.3s;
+  }
+  .extra-card:hover .extra-buy-btn {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .extra-buy-btn:hover { background: var(--gold-light); }
+
+  /* Gold top border on hover */
+  .extra-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s;
+  }
+  .extra-card:hover::after { transform: scaleX(1); }
+
+  /* ── HOW IT WORKS ── */
+  .how-section {
+    position: relative; z-index: 1;
+    padding: 5rem 3rem;
+    background: var(--bg2);
+    border-top: 1px solid rgba(245,158,11,0.12);
+    border-bottom: 1px solid rgba(245,158,11,0.12);
+  }
+  .how-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+  }
+  .how-step {
+    position: relative;
+    padding: 2rem;
+    background: rgba(245,158,11,0.04);
+    border: 1px solid rgba(245,158,11,0.1);
+    border-radius: 2px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .how-step:hover {
+    border-color: rgba(245,158,11,0.3);
+    background: rgba(245,158,11,0.07);
+  }
+  .how-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem;
+    color: rgba(245,158,11,0.15);
+    line-height: 1;
+    margin-bottom: 0.8rem;
+  }
+  .how-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  .how-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  /* ── FAQ ── */
+  .faq-section { position: relative; z-index: 1; padding: 5rem 3rem; }
+  .faq-list { margin-top: 3rem; max-width: 800px; }
+  .faq-item {
+    border-bottom: 1px solid rgba(245,158,11,0.1);
+    overflow: hidden;
+  }
+  .faq-q {
+    padding: 1.2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    transition: color 0.2s;
+    gap: 1rem;
+  }
+  .faq-q:hover, .faq-item.open .faq-q { color: var(--gold-light); }
+  .faq-icon {
+    width: 22px; height: 22px;
+    flex-shrink: 0;
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.3s, background 0.2s;
+    font-size: 0.7rem; color: var(--gold);
+  }
+  .faq-item.open .faq-icon { transform: rotate(45deg); background: var(--gold-dim); }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    transition: max-height 0.35s ease, padding 0.3s;
+    padding: 0 0 0;
+    font-weight: 400;
+  }
+  .faq-item.open .faq-a {
+    max-height: 200px;
+    padding-bottom: 1.2rem;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 1;
+    padding: 3rem;
+    background: var(--bg2);
+    border-top: 1px solid rgba(245,158,11,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+  }
+  .footer-brand span { color: var(--text-muted); font-size: 0.8rem; font-family: 'Rajdhani'; letter-spacing: 0.12em; display: block; margin-top: 0.2rem; }
+  .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+  .footer-links a {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-copy {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--bg2);
+    border: 1px solid rgba(245,158,11,0.25);
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    transform: translateY(20px);
+    transition: transform 0.35s cubic-bezier(.25,.46,.45,.94);
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+
+  /* Gold top accent */
+  .modal::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+
+  .modal-header {
+    padding: 1.8rem 2rem 1.2rem;
+    border-bottom: 1px solid rgba(245,158,11,0.12);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .modal-item-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .modal-item-img {
+    width: 52px;
+    height: 52px;
+    object-fit: cover;
+    border: 1px solid rgba(245,158,11,0.3);
+  }
+  .modal-item-cat {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.2rem;
+  }
+  .modal-item-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.06em;
+    color: var(--text);
+    line-height: 1;
+  }
+  .modal-item-price {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--gold-light);
+    margin-top: 0.25rem;
+  }
+  .modal-close {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-muted);
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    flex-shrink: 0;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .modal-close:hover { border-color: var(--red); color: var(--red); }
+
+  .modal-body { padding: 1.5rem 2rem; }
+  .modal-body p {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+    font-weight: 400;
+  }
+
+  .field-group { margin-bottom: 1.2rem; }
+  .field-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+  }
+  .field-input {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: border-color 0.2s;
+    outline: none;
+    border-radius: 2px;
+  }
+  .field-input:focus { border-color: var(--gold); }
+  .field-input::placeholder { color: var(--text-muted); }
+  .field-hint {
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    margin-top: 0.35rem;
+    font-weight: 400;
+  }
+
+  .modal-footer {
+    padding: 1.2rem 2rem 1.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .modal-submit {
+    width: 100%;
+    padding: 0.85rem;
+    background: var(--gold);
+    color: #000;
+    border: none;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    cursor: pointer;
+    clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+    transition: background 0.2s, transform 0.15s;
+  }
+  .modal-submit:hover:not(:disabled) { background: var(--gold-light); transform: translateY(-1px); }
+  .modal-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .modal-note {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── SUCCESS STATE ── */
+  .modal-success {
+    display: none;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .modal-success.show { display: flex; }
+  .modal-form-wrap.hide { display: none; }
+
+  .success-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+  }
+  .success-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.08em;
+    color: var(--green);
+  }
+  .success-msg {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 400;
+    max-width: 340px;
+  }
+  .success-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.5rem;
+    border: 1px solid rgba(34,197,94,0.3);
+    color: var(--green);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.2s;
+    margin-top: 0.5rem;
+  }
+  .success-link:hover { background: rgba(34,197,94,0.08); }
+
+  /* ── ERROR TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(100px);
+    background: var(--bg2);
+    border: 1px solid rgba(239,68,68,0.4);
+    color: #fca5a5;
+    padding: 0.8rem 1.5rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    z-index: 2000;
+    transition: transform 0.35s cubic-bezier(.25,.46,.45,.94);
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .extras-grid { padding: 0 1.5rem 4rem; }
+    .section-header, .filter-bar { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .how-section, .faq-section { padding: 4rem 1.5rem; }
+    footer { padding: 2rem 1.5rem; }
+    .counter-strip { grid-template-columns: repeat(2,1fr); }
+    .counter-item:nth-child(2) { border-right: none; }
+  }
+  @media (max-width: 560px) {
+    .extras-grid { grid-template-columns: repeat(2, 1fr); padding: 0 1rem 3rem; }
+    .section-header { padding-left: 1rem; padding-right: 1rem; flex-direction: column; align-items: flex-start; }
+    .filter-bar { padding-left: 1rem; }
+    .modal { clip-path: none; }
+  }
+
+  /* ── PERMANENT BADGE ── */
+  .badge-perm {
+    display: inline-block;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    padding: 0.15rem 0.45rem;
+    background: rgba(245,158,11,0.2);
+    border: 1px solid rgba(245,158,11,0.5);
+    color: var(--gold-light);
+    text-transform: uppercase;
+    vertical-align: middle;
+    margin-left: 0.35rem;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#" class="nav-logo">HAVEN <span style="color:var(--gold)">RP</span></a>
+  <div class="nav-links">
+    <a href="#extras">Extras</a>
+    <a href="#como-funciona">Como Funciona</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <a href="https://discord.gg/havenrp" class="nav-discord" target="_blank">
+    <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+    Discord
+  </a>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-eyebrow">— Haven RP · Servidor FiveM —</div>
+  <h1 class="hero-title">
+    LOJA DE
+    <span class="gold-word">EXTRAS</span>
+  </h1>
+  <p class="hero-subtitle">Adquira itens exclusivos e personalize sua experiência no servidor</p>
+  <div class="hero-cta">
+    <a href="#extras" class="btn-primary">Ver Extras</a>
+    <a href="https://discord.gg/havenrp" class="btn-outline" target="_blank">Entrar no Discord</a>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ── COUNTER STRIP ── -->
+<div class="counter-strip">
+  <div class="counter-item">
+    <div class="counter-num">15</div>
+    <div class="counter-label">Itens Disponíveis</div>
+  </div>
+  <div class="counter-item">
+    <div class="counter-num">24h</div>
+    <div class="counter-label">Suporte via Ticket</div>
+  </div>
+  <div class="counter-item">
+    <div class="counter-num">100%</div>
+    <div class="counter-label">Entrega Garantida</div>
+  </div>
+  <div class="counter-item">
+    <div class="counter-num">PIX</div>
+    <div class="counter-label">Pagamento Seguro</div>
+  </div>
+</div>
+
+<!-- ── EXTRAS SECTION ── -->
+<div class="section-wrap" id="extras">
+  <div class="section-header">
+    <div>
+      <div class="section-label">// catálogo completo</div>
+      <h2 class="section-title">NOSSOS <span>EXTRAS</span></h2>
+    </div>
+    <p class="section-desc">Clique no item desejado para abrir um ticket de compra. Nossa equipe irá te atender em instantes.</p>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">Todos</button>
+    <button class="filter-btn" data-filter="Propriedade">Propriedade</button>
+    <button class="filter-btn" data-filter="Visual">Visual</button>
+    <button class="filter-btn" data-filter="Inventário">Inventário</button>
+    <button class="filter-btn" data-filter="Negócio">Negócio</button>
+    <button class="filter-btn" data-filter="Luxo">Luxo</button>
+    <button class="filter-btn" data-filter="Identidade">Identidade</button>
+    <button class="filter-btn" data-filter="Acessório">Acessório</button>
+    <button class="filter-btn" data-filter="Armazenamento">Armazenamento</button>
+  </div>
+
+  <!-- EXTRAS GRID -->
+  <div class="extras-grid" id="extrasGrid">
+
+    <div class="extra-card" data-category="Propriedade" data-key="academia">
+      <img src="imgs/ITENS_SITE_HAVEN_ACADEMIA.jpg" alt="Academia Exclusiva" loading="lazy">
+      <div class="extra-info">
+        <div class="extra-cat">Propriedade</div>
+        <div class="extra-name">Academia Exclusiva</div>
+        <div class="extra-price">R$ 50,00</div>
+      </div>
+      <button class="extra-buy-btn">Comprar</button>
+    </div>
+
+    <div class="extra-card" data-category="Visual" data-key="armas">
+      <img src="imgs/ITENS_SITE_HAVEN_ARMAS.jpg" alt="Skin de Armas" loading="lazy">
+      <div class="extra-info">
+        <div class="extra-cat">Visual</div>
+        <div class="extra-name">Skin de Armas</div>
+        <div class="extra-price">R$ 200,00</div>
+      </div>
+      <button class="extra-buy-btn">Comprar</button>
+    </div>
+
+    <div class="extra-card" data-category="Inventário" data-key="bag">
+      <img src="imgs/ITENS_SITE_HAVEN_BAG.jpg" alt="Bag Exclusiva" loading="lazy">
+      <div class="extra-info">
+        <div class="extra-cat">Inventário</div>
+        <div class="extra-name">Mochila (Inventário)</div>
+        <div class="extra-price">R$ 50,00</div>
+      </div>
+      <button class="extra-buy-btn">Comprar</button>
+    </div>
+
+    <div class="extra-card" data-category="Negócio" data-key="barbearia">
+      <img src="imgs/ITENS_SITE_HAVEN_BARBEARIA.jpg" alt="Barbearia" loading="lazy">
+      <div class="extra-info">
+        <div class="extra-cat">Negócio</div>
+        <div class="extra-name">Barbearia</div>
+        <div class="extra-price">R$ 30,00</div>
+      </div>
+      <button class="extra-buy-btn">Comprar</button>
+    </div>
+
+    <div class="extra-card" data-category="Armazenamento" data-key="bau">
+      <img src="imgs/ITENS_SITE_HAVEN_BAU.jpg" alt="Aumento de Baú" loading="lazy">
+      <div class="extra-info">
+        <div class="extra-cat">Armazenamento</div>
+        <div class="extra-name">Aumento de Baú</div>
+        <div class="extra-price">R$ 50,00</div>
+      </div>
+      <button class="extra-buy-btn">Comprar</button>
+    </div>
+
+    <div class="extra-card" data-category="Propriedade" data-key="cozinha">
+      <img src="imgs/ITENS_SITE_HAVEN_COZINHA.jpg" alt="Cozinha Exclusiva" loading="lazy">
+      <div class="extra-info">
+        <div class="extra-cat">Propriedade</div>
+        <div class="extra-name">Cozinha Exclusiva</div>
+        <div class="extra-price">R$ 50,00</div>
+      </div>
+      <button class="extra-buy-btn">Comprar</button>
+    </div>
+
+    <div class="extra-card" data-category="Propriedade" data-key="fazenda">
+      <img src="imgs/ITENS_SITE_HAVEN_FAZENDA.jpg" alt="Fazenda" loading="lazy">
+      <div class="extra-info">
+        <div class="extra-cat">Propriedade</div>
+        <div class="extra-name">Fazenda <span class="badge-perm">Permanente</span></div>
+        <div class="extra-price">R$ 150,00</div>
+      </div>
+      <button class="extra-buy-btn">Comprar</button>
+    </div>
+
+    <div class="extra-card" data-category="Propriedade" data-key="garagem">
+      <img src="imgs/ITENS_SITE_HAVEN_GARAGEM.jpg" alt="Garagem Exclusiva" loading="lazy">
+      <div class="extra-info">
+        <div class="extra-cat">Propriedade</div>
+        <div class="extra-name">Garagem Exclusiva <span class="badge-perm">Permanente</span></div>
+        <div class="extra-price">R$ 150,00</div>
+      </div>
+      <button class="extra-buy-btn">Comprar</button>
+    </div>
+
+    <div class="extra-card" data-category="Luxo" data-key="jacuzzi">
+      <img src="imgs/ITENS_SITE_HAVEN_JACUZZI.jpg" alt="Jacuzzi" loading="lazy">
+      <div class="extra-info">
+        <div class="extra-cat">Luxo</div>
+        <div class="extra-name">Jacuzzi</div>
+        <div class="extra-price">R$ 35,00</div>
+      </div>
+      <button class="extra-buy-btn">Comprar</button>
+    </div>
+
+    <div class="extra-card" data-category="Propriedade" data-key="mansao">
+      <img src="imgs/ITENS_SITE_HAVEN_MANSAO.jpg" alt="Mansão Exclusiva" loading="lazy">
+      <div class="extra-info">
+        <div class="extra-cat">Propriedade</div>
+        <div class="extra-name">Mansão Exclusiva</div>
+        <div class="extra-price">R$ 150,00</div>
+      </div>
+      <button class="extra-buy-btn">Comprar</button>
+    </div>
+
+    <div class="extra-card" data-category="Inventário" data-key="mochila">
+      <img src="imgs/ITENS_SITE_HAVEN_MOCHILA.jpg" alt="Mochila de Roupas" loading="lazy">
+      <div class="extra-info">
+        <div class="extra-cat">Inventário</div>
+        <div class="extra-name">Mochila de Roupas</div>
+        <div class="extra-price">R$ 50,00</div>
+      </div>
+      <button class="extra-buy-btn">Comprar</button>
+    </div>
+
+    <div class="extra-card" data-category="Identidade" data-key="personagem">
+      <img src="imgs/ITENS_SITE_HAVEN_PERSONAGEM.jpg" alt="Reset Personagem" loading="lazy">
+      <div class="extra-info">
+        <div class="extra-cat">Identidade</div>
+        <div class="extra-name">Reset Personagem</div>
+        <div class="extra-price">R$ 50,00</div>
+      </div>
+      <button class="extra-buy-btn">Comprar</button>
+    </div>
+
+    <div class="extra-card" data-category="Negócio" data-key="roupas">
+      <img src="imgs/ITENS_SITE_HAVEN_ROUPAS.jpg" alt="Loja de Roupas" loading="lazy">
+      <div class="extra-info">
+        <div class="extra-cat">Negócio</div>
+        <div class="extra-name">Loja de Roupas</div>
+        <div class="extra-price">R$ 30,00</div>
+      </div>
+      <button class="extra-buy-btn">Comprar</button>
+    </div>
+
+    <div class="extra-card" data-category="Acessório" data-key="som">
+      <img src="imgs/ITENS_SITE_HAVEN_SOM.jpg" alt="Caixa de Som" loading="lazy">
+      <div class="extra-info">
+        <div class="extra-cat">Acessório</div>
+        <div class="extra-name">Caixa de Som</div>
+        <div class="extra-price">R$ 50,00</div>
+      </div>
+      <button class="extra-buy-btn">Comprar</button>
+    </div>
+
+    <div class="extra-card" data-category="Visual" data-key="tattoo">
+      <img src="imgs/ITENS_SITE_HAVEN_TATTOO.jpg" alt="Tattoo Exclusiva" loading="lazy">
+      <div class="extra-info">
+        <div class="extra-cat">Visual</div>
+        <div class="extra-name">Tattoo Exclusiva <span class="badge-perm">Permanente</span></div>
+        <div class="extra-price">R$ 150,00</div>
+      </div>
+      <button class="extra-buy-btn">Comprar</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── HOW IT WORKS ── -->
+<section class="how-section" id="como-funciona">
+  <div>
+    <div class="section-label">// processo de compra</div>
+    <h2 class="section-title">COMO <span>FUNCIONA</span></h2>
+  </div>
+  <div class="how-grid">
+    <div class="how-step">
+      <div class="how-num">01</div>
+      <div class="how-title">Escolha o Extra</div>
+      <div class="how-desc">Navegue pelo catálogo, filtre por categoria e clique em "Comprar" no item desejado.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-num">02</div>
+      <div class="how-title">Preencha os Dados</div>
+      <div class="how-desc">Informe seu Discord ID e seu nick no servidor FiveM para identificarmos sua conta.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-num">03</div>
+      <div class="how-title">Ticket Aberto</div>
+      <div class="how-desc">Um canal privado será criado no nosso Discord. A Staff irá enviar o PIX e confirmar o pagamento.</div>
+    </div>
+    <div class="how-step">
+      <div class="how-num">04</div>
+      <div class="how-title">Receba no Servidor</div>
+      <div class="how-desc">Após a confirmação, o item é entregue diretamente na sua conta dentro do FiveM.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="faq-section" id="faq">
+  <div>
+    <div class="section-label">// perguntas frequentes</div>
+    <h2 class="section-title">DÚVIDAS <span>COMUNS</span></h2>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Como sei meu Discord ID?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">Vá em Configurações do Discord → Avançado → ative o "Modo Desenvolvedor". Depois clique com o botão direito no seu perfil e copie o ID.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Em quanto tempo recebo meu item?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">Assim que o pagamento for confirmado no ticket, a entrega é feita em até 24 horas. Normalmente é bem mais rápido durante o horário de atendimento da Staff.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Posso comprar mais de um extra ao mesmo tempo?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">Sim! Basta abrir um ticket para cada item desejado ou mencionar na compra que quer adquirir mais de um. A Staff te orientará sobre o pagamento conjunto.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Os extras são permanentes?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">Sim, todos os itens são permanentes e ficam vinculados à sua conta no servidor. Em caso de reset de personagem, entre em contato com a Staff.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Qual a forma de pagamento aceita?
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">Aceitamos PIX. Após a abertura do ticket, a Staff irá te enviar a chave e confirmar o pagamento manualmente.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-brand">
+    HAVEN RP
+    <span>Servidor FiveM — Loja de Extras</span>
+  </div>
+  <div class="footer-links">
+    <a href="#extras">Catálogo</a>
+    <a href="#como-funciona">Como Funciona</a>
+    <a href="https://discord.gg/havenrp" target="_blank">Discord</a>
+  </div>
+  <div class="footer-copy">© 2025 Haven RP — Todos os direitos reservados</div>
+</footer>
+
+<!-- ── MODAL ── -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-item-badge">
+        <img src="" alt="" class="modal-item-img" id="modalImg">
+        <div>
+          <div class="modal-item-cat" id="modalCat"></div>
+          <div class="modal-item-name" id="modalName"></div>
+          <div class="modal-item-price" id="modalPrice"></div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="fecharModal()">✕</button>
+    </div>
+
+    <!-- FORM -->
+    <div class="modal-form-wrap" id="modalFormWrap">
+      <div class="modal-body">
+        <p>Preencha os dados abaixo para abrir seu ticket de compra. Nossa equipe entrará em contato pelo Discord.</p>
+        <div class="field-group">
+          <label class="field-label" for="fieldDiscordId">Discord ID</label>
+          <input class="field-input" id="fieldDiscordId" type="text" placeholder="Ex: 123456789012345678" maxlength="20">
+          <div class="field-hint">Ative o Modo Desenvolvedor no Discord para ver seu ID.</div>
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="fieldNick">Nick no Servidor FiveM</label>
+          <input class="field-input" id="fieldNick" type="text" placeholder="Ex: João Silva" maxlength="40">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-submit" id="modalSubmitBtn" onclick="enviarPedido()">
+          Abrir Ticket de Compra
+        </button>
+        <div class="modal-note">Você receberá uma notificação no Discord quando o ticket for criado.</div>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="modal-success" id="modalSuccess">
+      <div class="success-icon">✓</div>
+      <div class="success-title">Ticket Aberto!</div>
+      <p class="success-msg">Seu ticket foi criado com sucesso. Acesse o canal privado no Discord e aguarde nossa equipe.</p>
+      <a href="" class="success-link" id="successLink" target="_blank">
+        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03z"/></svg>
+        Ir para o Ticket
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="errorToast"></div>
+
+<script>
+  // ── CONFIG ─────────────────────────────────────────────────────────
+  // Altere esta URL para o endereço do seu bot (ngrok ou IP fixo)
+  const WEBHOOK_URL = 'https://SEU-NGROK-URL.ngrok-free.dev';
+
+  // ── EXTRAS DATA ─────────────────────────────────────────────────────
+  const EXTRAS = {
+    academia:   { nome: 'Academia Exclusiva',            cat: 'Propriedade',    price: 'R$ 50,00'  },
+    armas:      { nome: 'Skin de Armas',                 cat: 'Visual',         price: 'R$ 200,00' },
+    bag:        { nome: 'Mochila (Inventário)',           cat: 'Inventário',     price: 'R$ 50,00'  },
+    barbearia:  { nome: 'Barbearia',                     cat: 'Negócio',        price: 'R$ 30,00'  },
+    bau:        { nome: 'Aumento de Baú',                cat: 'Armazenamento',  price: 'R$ 50,00'  },
+    cozinha:    { nome: 'Cozinha Exclusiva',             cat: 'Propriedade',    price: 'R$ 50,00'  },
+    fazenda:    { nome: 'Fazenda (Permanente)',           cat: 'Propriedade',    price: 'R$ 150,00' },
+    garagem:    { nome: 'Garagem Exclusiva (Permanente)',cat: 'Propriedade',    price: 'R$ 150,00' },
+    jacuzzi:    { nome: 'Jacuzzi',                       cat: 'Luxo',           price: 'R$ 35,00'  },
+    mansao:     { nome: 'Mansão Exclusiva',              cat: 'Propriedade',    price: 'R$ 150,00' },
+    mochila:    { nome: 'Mochila de Roupas',             cat: 'Inventário',     price: 'R$ 50,00'  },
+    personagem: { nome: 'Reset Personagem',              cat: 'Identidade',     price: 'R$ 50,00'  },
+    roupas:     { nome: 'Loja de Roupas',                cat: 'Negócio',        price: 'R$ 30,00'  },
+    som:        { nome: 'Caixa de Som',                  cat: 'Acessório',      price: 'R$ 50,00'  },
+    tattoo:     { nome: 'Tattoo Exclusiva (Permanente)', cat: 'Visual',         price: 'R$ 150,00' },
+  };
+
+  // ── IMG MAP ─────────────────────────────────────────────────────────
+  const IMG_MAP = {
+    academia:   'imgs/ITENS_SITE_HAVEN_ACADEMIA.jpg',
+    armas:      'imgs/ITENS_SITE_HAVEN_ARMAS.jpg',
+    bag:        'imgs/ITENS_SITE_HAVEN_BAG.jpg',
+    barbearia:  'imgs/ITENS_SITE_HAVEN_BARBEARIA.jpg',
+    bau:        'imgs/ITENS_SITE_HAVEN_BAU.jpg',
+    cozinha:    'imgs/ITENS_SITE_HAVEN_COZINHA.jpg',
+    fazenda:    'imgs/ITENS_SITE_HAVEN_FAZENDA.jpg',
+    garagem:    'imgs/ITENS_SITE_HAVEN_GARAGEM.jpg',
+    jacuzzi:    'imgs/ITENS_SITE_HAVEN_JACUZZI.jpg',
+    mansao:     'imgs/ITENS_SITE_HAVEN_MANSAO.jpg',
+    mochila:    'imgs/ITENS_SITE_HAVEN_MOCHILA.jpg',
+    personagem: 'imgs/ITENS_SITE_HAVEN_PERSONAGEM.jpg',
+    roupas:     'imgs/ITENS_SITE_HAVEN_ROUPAS.jpg',
+    som:        'imgs/ITENS_SITE_HAVEN_SOM.jpg',
+    tattoo:     'imgs/ITENS_SITE_HAVEN_TATTOO.jpg',
+  };
+
+  // ── FILTER ──────────────────────────────────────────────────────────
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      document.querySelectorAll('.extra-card').forEach(card => {
+        card.dataset.hidden = (f !== 'all' && card.dataset.category !== f) ? 'true' : 'false';
+      });
+    });
+  });
+
+  // ── CARD CLICK ──────────────────────────────────────────────────────
+  document.querySelectorAll('.extra-card').forEach(card => {
+    card.addEventListener('click', () => abrirModal(card.dataset.key));
+  });
+
+  // ── MODAL ───────────────────────────────────────────────────────────
+  let modalKey = null;
+
+  function abrirModal(key) {
+    const extra = EXTRAS[key];
+    if (!extra) return;
+    modalKey = key;
+
+    document.getElementById('modalImg').src  = IMG_MAP[key];
+    document.getElementById('modalImg').alt  = extra.nome;
+    document.getElementById('modalCat').textContent   = extra.cat;
+    document.getElementById('modalName').textContent  = extra.nome;
+    document.getElementById('modalPrice').textContent = extra.price;
+
+    // Reset state
+    document.getElementById('modalFormWrap').classList.remove('hide');
+    document.getElementById('modalSuccess').classList.remove('show');
+    document.getElementById('fieldDiscordId').value = '';
+    document.getElementById('fieldNick').value = '';
+    document.getElementById('modalSubmitBtn').disabled = false;
+    document.getElementById('modalSubmitBtn').textContent = 'Abrir Ticket de Compra';
+
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function fecharModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    modalKey = null;
+  }
+
+  // Close on overlay click
+  document.getElementById('modalOverlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget) fecharModal();
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') fecharModal();
+  });
+
+  // ── SUBMIT ──────────────────────────────────────────────────────────
+  async function enviarPedido() {
+    const discordId = document.getElementById('fieldDiscordId').value.trim();
+    const nick      = document.getElementById('fieldNick').value.trim();
+
+    if (!discordId || !/^\d{17,20}$/.test(discordId)) {
+      showToast('ID do Discord inválido. Verifique e tente novamente.');
+      return;
+    }
+    if (!nick) {
+      showToast('Informe seu nick no servidor FiveM.');
+      return;
+    }
+
+    const btn = document.getElementById('modalSubmitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Aguarde...';
+
+    try {
+      const extra = EXTRAS[modalKey];
+      const res   = await fetch(`${WEBHOOK_URL}/ticket-extra`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ extra: modalKey, price: extra.price, nick, discordId }),
+      });
+      const data = await res.json();
+
+      if (!res.ok || !data.success) throw new Error(data.error || 'Erro desconhecido');
+
+      // Show success
+      document.getElementById('modalFormWrap').classList.add('hide');
+      const successEl = document.getElementById('modalSuccess');
+      successEl.classList.add('show');
+      if (data.channelUrl) {
+        document.getElementById('successLink').href = data.channelUrl;
+        document.getElementById('successLink').style.display = 'inline-flex';
+      } else {
+        document.getElementById('successLink').style.display = 'none';
+      }
+
+    } catch (err) {
+      console.error(err);
+      showToast('Não foi possível abrir o ticket. Tente pelo Discord diretamente.');
+      btn.disabled = false;
+      btn.textContent = 'Abrir Ticket de Compra';
+    }
+  }
+
+  // ── FAQ ──────────────────────────────────────────────────────────────
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // ── TOAST ────────────────────────────────────────────────────────────
+  function showToast(msg) {
+    const t = document.getElementById('errorToast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 4000);
+  }
+
+  // ── SMOOTH SCROLL FOR NAV LINKS ─────────────────────────────────────
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+    });
+  });
+</script>
+</body>
+</html>
